@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CleanArchitechture</string>
+    <string name="calculate_btn_text">calculate</string>
+</resources>
