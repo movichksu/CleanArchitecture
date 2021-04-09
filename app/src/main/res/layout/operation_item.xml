@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp">
+    android:layout_margin="5dp"
+    android:id="@+id/operation_container">
 
     <TextView
         android:id="@+id/operation_text"

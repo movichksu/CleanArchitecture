@@ -2,6 +2,6 @@ package com.example.cleanarchitechture.domain
 
 interface CalculateUseCase {
 
-    fun calculate(first: Int, second: Int): Int
+    suspend fun calculate(first: Int, second: Int): Int
 
 }
