@@ -5,7 +5,7 @@ class CalculateUseCaseImplementation(
     val operationsRepository: OperationsRepository
 ) : CalculateUseCase {
 
-    override fun calculate(first: Int, second: Int): Int {
+    override suspend fun calculate(first: Int, second: Int): Int {
         val rezult = calculateRepository.calculate(Operation(first, second))
         val operation = Operation(first, second, rezult)
         operationsRepository.addOperation(operation)

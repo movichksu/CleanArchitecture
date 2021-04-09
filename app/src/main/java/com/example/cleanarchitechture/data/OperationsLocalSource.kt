@@ -15,5 +15,9 @@ class OperationsLocalSource: OperationsRepository{
         operations.add(operation)
     }
 
+//    override fun removeOperation(position: Int) {
+//        operations.removeAt(position)
+//    }
+
 
 }

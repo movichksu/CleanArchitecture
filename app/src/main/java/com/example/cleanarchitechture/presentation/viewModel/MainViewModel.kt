@@ -3,10 +3,13 @@ package com.example.cleanarchitechture.presentation.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.CalculateUseCase
 import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsUseCase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
@@ -16,27 +19,42 @@ class MainViewModel : ViewModel() {
     var first: String = ""
     var second: String = ""
 
-    private var operations = MutableLiveData<List<Operation>>(listOf())
+    private var operations = MutableLiveData<MutableList<Operation>>(mutableListOf())
 
-    fun getOperations(): LiveData<List<Operation>>{
+    private var _calculationState = MutableLiveData<CalculationState>(CalculationState.Free)
+    val calculationState: LiveData<CalculationState> = _calculationState
+
+
+
+    fun getOperations(): LiveData<MutableList<Operation>>{
         return operations
     }
 
+//    fun removeOperation(position: Int){
+//        operationsUseCase.removeOperation(position)
+//    }
+
 
     fun calculate(): Int {
-        val rezult = calculateUseCase.calculate(first.toInt(), second.toInt())
-        operations.value = operationsUseCase.getOperations()
+        var rezult : Int = 0
+        _calculationState.value = CalculationState.Loading
+        viewModelScope.launch{
+            rezult = calculateUseCase.calculate(first.toInt(), second.toInt())
+            operations.value = operationsUseCase.getOperations().toMutableList()
+            _calculationState.value = CalculationState.Rezult
+            setFree()
+        }
         return rezult
-
     }
 
     init{
-
-        operations.value = operationsUseCase.getOperations()
-
+        operations.value = operationsUseCase.getOperations().toMutableList()
     }
 
-
+    suspend fun setFree(){
+        delay(3000)
+        _calculationState.value = CalculationState.Free
+    }
 
 
 }
