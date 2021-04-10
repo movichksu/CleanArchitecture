@@ -25,20 +25,15 @@ class MainViewModel : ViewModel() {
     val calculationState: LiveData<CalculationState> = _calculationState
 
 
-
-    fun getOperations(): LiveData<MutableList<Operation>>{
+    fun getOperations(): LiveData<MutableList<Operation>> {
         return operations
     }
 
-//    fun removeOperation(position: Int){
-//        operationsUseCase.removeOperation(position)
-//    }
-
 
     fun calculate(): Int {
-        var rezult : Int = 0
+        var rezult: Int = 0
         _calculationState.value = CalculationState.Loading
-        viewModelScope.launch{
+        viewModelScope.launch {
             rezult = calculateUseCase.calculate(first.toInt(), second.toInt())
             operations.value = operationsUseCase.getOperations().toMutableList()
             _calculationState.value = CalculationState.Rezult
@@ -47,13 +42,18 @@ class MainViewModel : ViewModel() {
         return rezult
     }
 
-    init{
+    init {
         operations.value = operationsUseCase.getOperations().toMutableList()
     }
 
-    suspend fun setFree(){
+    suspend fun setFree() {
         delay(3000)
         _calculationState.value = CalculationState.Free
+    }
+
+    fun onOperationSelected(operation: Operation) {
+        operationsUseCase.removeOperation(operation)
+        operations.value = operationsUseCase.getOperations().toMutableList()
     }
 
 

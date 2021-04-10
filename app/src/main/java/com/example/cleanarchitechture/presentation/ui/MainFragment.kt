@@ -15,19 +15,20 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cleanarchitechture.R
+import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
+import com.example.cleanarchitechture.presentation.adapter.ItemClickListener
 import com.example.cleanarchitechture.presentation.viewModel.CalculationState
 import com.example.cleanarchitechture.presentation.viewModel.MainViewModel
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), ItemClickListener {
 
     companion object {
         fun newInstance() =
-            MainFragment()
+                MainFragment()
     }
 
-   // private lateinit var operationContainer: View
 
     private lateinit var viewModel: MainViewModel
     private lateinit var firstInput: EditText
@@ -54,7 +55,7 @@ class MainFragment : Fragment() {
         }
 
         calculateBtn.setOnClickListener {
-            val toast = Toast.makeText(requireContext(), "${viewModel.calculate()}", Toast.LENGTH_SHORT )
+            val toast = Toast.makeText(requireContext(), "${viewModel.calculate()}", Toast.LENGTH_SHORT)
             toast.show()
         }
 
@@ -64,13 +65,19 @@ class MainFragment : Fragment() {
 
         viewModel.calculationState.observe(viewLifecycleOwner, Observer {
             calculationStateText.text = getString(
-                when (it) {
-                    CalculationState.Free -> R.string.free_state
-                    CalculationState.Loading -> R.string.loading_state
-                    CalculationState.Rezult -> R.string.rezult_state
-                }
+                    when (it) {
+                        CalculationState.Free -> R.string.free_state
+                        CalculationState.Loading -> R.string.loading_state
+                        CalculationState.Rezult -> R.string.rezult_state
+                    }
             )
+            when (it) {
+                CalculationState.Free -> calculateBtn.isClickable = true
+                CalculationState.Loading -> calculateBtn.isClickable = false
+                CalculationState.Rezult -> calculateBtn.isClickable = true
+            }
         })
+
 
     }
 
@@ -82,12 +89,21 @@ class MainFragment : Fragment() {
         calculateBtn = view.findViewById(R.id.calculate_btn)
         operations = view.findViewById(R.id.operations_list)
         calculationStateText = view.findViewById(R.id.calculation_state_text)
-//        operationContainer = view.findViewById(R.id.operation_container)
 
         operations.layoutManager = LinearLayoutManager(requireContext())
         operations.adapter = adapter
+        adapter.setListener(this)
 
 
+    }
+
+    override fun onClick(operation: Operation) {
+        viewModel.onOperationSelected(operation)
+    }
+
+    override fun onDestroyView() {
+        adapter.setListener(null)
+        super.onDestroyView()
     }
 
 }

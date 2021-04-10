@@ -8,19 +8,19 @@ object Dependencies {
 
     private val operationsRepository: OperationsRepository by lazy { OperationsLocalSource() }
 
-    fun getCalculateRepository():CalculateRepository{
+    fun getCalculateRepository(): CalculateRepository {
         return SumCalculator()
     }
 
-    fun getOperaationsRepository():OperationsRepository{
+    fun getOperaationsRepository(): OperationsRepository {
         return operationsRepository
     }
 
-    fun getCalculateUseCase():CalculateUseCase{
+    fun getCalculateUseCase(): CalculateUseCase {
         return CalculateUseCaseImplementation(getCalculateRepository(), getOperaationsRepository())
     }
 
-    fun getOperationsUseCase(): OperationsUseCase{
+    fun getOperationsUseCase(): OperationsUseCase {
         return OperationsUseCaseImpl(getOperaationsRepository())
     }
 

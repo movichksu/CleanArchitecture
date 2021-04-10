@@ -1,8 +1,8 @@
 package com.example.cleanarchitechture.domain
 
 class CalculateUseCaseImplementation(
-    val calculateRepository: CalculateRepository,
-    val operationsRepository: OperationsRepository
+        private val calculateRepository: CalculateRepository,
+        private val operationsRepository: OperationsRepository
 ) : CalculateUseCase {
 
     override suspend fun calculate(first: Int, second: Int): Int {
@@ -11,7 +11,5 @@ class CalculateUseCaseImplementation(
         operationsRepository.addOperation(operation)
         return rezult
     }
-
-
 
 }
