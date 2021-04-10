@@ -3,9 +3,9 @@ package com.example.cleanarchitechture.data
 import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsRepository
 
-class OperationsLocalSource: OperationsRepository{
+class OperationsLocalSource : OperationsRepository {
 
-    private var operations = mutableListOf<Operation>(Operation(1,2, 3), Operation(3,6,9))
+    private var operations = mutableListOf<Operation>(Operation(1, 2, 3), Operation(3, 6, 9))
 
     override fun getOperations(): List<Operation> {
         return operations
@@ -15,9 +15,9 @@ class OperationsLocalSource: OperationsRepository{
         operations.add(operation)
     }
 
-//    override fun removeOperation(position: Int) {
-//        operations.removeAt(position)
-//    }
+    override fun removeOperation(operation: Operation) {
+        operations.remove(operation)
+    }
 
 
 }
