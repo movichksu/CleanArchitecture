@@ -8,6 +8,7 @@ import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.CalculateUseCase
 import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsUseCase
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,18 +44,21 @@ class MainViewModel : ViewModel() {
     }
 
     init {
-        operations.value = operationsUseCase.getOperations().toMutableList()
+        viewModelScope.launch {
+            operations.value = operationsUseCase.getOperations().toMutableList()
+        }
     }
 
     suspend fun setFree() {
-        delay(3000)
+        delay(2000)
         _calculationState.value = CalculationState.Free
     }
 
-    fun onOperationSelected(operation: Operation) {
-        operationsUseCase.removeOperation(operation)
-        operations.value = operationsUseCase.getOperations().toMutableList()
-    }
+    fun onOperationSelected(operation: Operation) =
+            viewModelScope.async {
+                operationsUseCase.removeOperation(operation)
+                operations.value = operationsUseCase.getOperations().toMutableList()
+            }
 
 
 }

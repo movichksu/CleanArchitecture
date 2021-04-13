@@ -55,8 +55,14 @@ class MainFragment : Fragment(), ItemClickListener {
         }
 
         calculateBtn.setOnClickListener {
-            val toast = Toast.makeText(requireContext(), "${viewModel.calculate()}", Toast.LENGTH_SHORT)
-            toast.show()
+            if (firstInput.text.isNotEmpty() && secondInput.text.isNotEmpty()) {
+                val toast = Toast.makeText(requireContext(), "${viewModel.calculate()}", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+            else{
+                val toast = Toast.makeText(requireContext(), "input fields are empty!", Toast.LENGTH_SHORT)
+                toast.show()
+            }
         }
 
         viewModel.getOperations().observe(viewLifecycleOwner, Observer {
@@ -72,9 +78,9 @@ class MainFragment : Fragment(), ItemClickListener {
                     }
             )
             when (it) {
-                CalculationState.Free -> calculateBtn.isClickable = true
-                CalculationState.Loading -> calculateBtn.isClickable = false
-                CalculationState.Rezult -> calculateBtn.isClickable = true
+                CalculationState.Free -> calculateBtn.isEnabled = true
+                CalculationState.Loading -> calculateBtn.isEnabled = false
+                CalculationState.Rezult -> calculateBtn.isEnabled = false
             }
         })
 

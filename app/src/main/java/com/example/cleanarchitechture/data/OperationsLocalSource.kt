@@ -2,12 +2,18 @@ package com.example.cleanarchitechture.data
 
 import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 class OperationsLocalSource : OperationsRepository {
 
     private var operations = mutableListOf<Operation>(Operation(1, 2, 3), Operation(3, 6, 9))
 
-    override fun getOperations(): List<Operation> {
+    override suspend fun getOperations(): List<Operation> {
+        withContext(Dispatchers.IO) {
+            delay(3000)
+        }
         return operations
     }
 

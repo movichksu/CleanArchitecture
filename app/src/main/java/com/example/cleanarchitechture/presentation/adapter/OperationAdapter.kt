@@ -26,9 +26,8 @@ class OperationAdapter internal constructor(
         viewHolder.text.text = item.toString()
         viewHolder.container.setOnClickListener {
             listener?.onClick(item)
-            notifyItemRemoved(position)
+            //notifyItemRemoved(position)
         }
-
 
     }
 
