@@ -9,7 +9,7 @@ import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.domain.Operation
 
 class OperationAdapter internal constructor(
-        private var data: MutableList<Operation>
+        private var data: List<Operation>
 ) : RecyclerView.Adapter<OperationAdapter.ViewHolder>() {
 
     private var listener: ItemClickListener? = null
@@ -33,7 +33,7 @@ class OperationAdapter internal constructor(
 
     override fun getItemCount() = data.size
 
-    fun setData(data: MutableList<Operation>) {
+    fun setData(data: List<Operation>) {
         this.data = data
         notifyDataSetChanged()
     }

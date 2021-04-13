@@ -8,18 +8,18 @@
     tools:context=".presentation.ui.MainFragment">
 
     <EditText
-        android:id="@+id/input_first"
+        android:id="@+id/first_input"
         style="@style/input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/input_second"
+        android:id="@+id/second_input"
         style="@style/input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_first" />
+        app:layout_constraintTop_toBottomOf="@+id/first_input" />
 
     <Button
         android:id="@+id/calculate_btn"
@@ -29,7 +29,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_second" />
+        app:layout_constraintTop_toBottomOf="@+id/second_input" />
 
     <TextView
         android:id="@+id/calculation_state_text"

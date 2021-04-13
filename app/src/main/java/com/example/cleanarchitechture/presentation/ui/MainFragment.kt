@@ -34,9 +34,9 @@ class MainFragment : Fragment(), ItemClickListener {
     private lateinit var firstInput: EditText
     private lateinit var secondInput: EditText
     private lateinit var calculateBtn: Button
-    private lateinit var operations: RecyclerView
+    private lateinit var operationsList: RecyclerView
     private lateinit var calculationStateText: TextView
-    private var adapter = OperationAdapter(mutableListOf())
+    private var adapter = OperationAdapter(listOf())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -90,14 +90,14 @@ class MainFragment : Fragment(), ItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        firstInput = view.findViewById(R.id.input_first)
-        secondInput = view.findViewById(R.id.input_second)
+        firstInput = view.findViewById(R.id.first_input)
+        secondInput = view.findViewById(R.id.second_input)
         calculateBtn = view.findViewById(R.id.calculate_btn)
-        operations = view.findViewById(R.id.operations_list)
+        operationsList = view.findViewById(R.id.operations_list)
         calculationStateText = view.findViewById(R.id.calculation_state_text)
 
-        operations.layoutManager = LinearLayoutManager(requireContext())
-        operations.adapter = adapter
+        operationsList.layoutManager = LinearLayoutManager(requireContext())
+        operationsList.adapter = adapter
         adapter.setListener(this)
 
 

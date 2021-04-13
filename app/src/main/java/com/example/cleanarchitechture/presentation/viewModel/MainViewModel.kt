@@ -20,13 +20,13 @@ class MainViewModel : ViewModel() {
     var first: String = ""
     var second: String = ""
 
-    private var operations = MutableLiveData<MutableList<Operation>>(mutableListOf())
+    private var operations = MutableLiveData<List<Operation>>(listOf())
 
     private var _calculationState = MutableLiveData<CalculationState>(CalculationState.Free)
     val calculationState: LiveData<CalculationState> = _calculationState
 
 
-    fun getOperations(): LiveData<MutableList<Operation>> {
+    fun getOperations(): LiveData<List<Operation>> {
         return operations
     }
 
@@ -36,7 +36,7 @@ class MainViewModel : ViewModel() {
         _calculationState.value = CalculationState.Loading
         viewModelScope.launch {
             rezult = calculateUseCase.calculate(first.toInt(), second.toInt())
-            operations.value = operationsUseCase.getOperations().toMutableList()
+            operations.value = operationsUseCase.getOperations()
             _calculationState.value = CalculationState.Rezult
             setFree()
         }
@@ -45,7 +45,7 @@ class MainViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            operations.value = operationsUseCase.getOperations().toMutableList()
+            operations.value = operationsUseCase.getOperations()
         }
     }
 
@@ -55,9 +55,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun onOperationSelected(operation: Operation) =
-            viewModelScope.async {
+            viewModelScope.launch {
                 operationsUseCase.removeOperation(operation)
-                operations.value = operationsUseCase.getOperations().toMutableList()
+                operations.value = operationsUseCase.getOperations()
             }
 
 

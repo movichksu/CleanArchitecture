@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 
 class OperationsLocalSource : OperationsRepository {
 
-    private var operations = mutableListOf<Operation>(Operation(1, 2, 3), Operation(3, 6, 9))
+    private var operations = mutableListOf(Operation(1, 2, 3), Operation(3, 6, 9))
 
     override suspend fun getOperations(): List<Operation> {
         withContext(Dispatchers.IO) {
