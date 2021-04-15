@@ -10,6 +10,7 @@ import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -45,7 +46,9 @@ class MainViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            operations.value = operationsUseCase.getOperations()
+            operationsUseCase.getOperations().collect {
+                operations.value = it
+            }
         }
     }
 
