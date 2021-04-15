@@ -1,9 +1,8 @@
 package com.example.cleanarchitechture.presentation.adapter
 
-import com.example.cleanarchitechture.domain.Operation
+import com.example.cleanarchitechture.entity.Person
 
 interface ItemClickListener {
 
-    fun onClick(operation: Operation)
-
+    fun onClick(person: Person)
 }

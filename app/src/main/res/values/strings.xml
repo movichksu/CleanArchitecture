@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">CleanArchitechture</string>
-    <string name="calculate_btn_text">calculate</string>
     <string name="free_state">FREE</string>
     <string name="loading_state">LOADING</string>
     <string name="rezult_state">REZULT</string>
+    <string name="add_btn_text">add person</string>
+    <string name="rate_input_hint">rate</string>
+    <string name="name_input_hint">Name</string>
 </resources>

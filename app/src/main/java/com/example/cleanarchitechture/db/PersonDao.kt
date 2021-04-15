@@ -1,0 +1,17 @@
+package com.example.cleanarchitechture.db
+
+import androidx.room.*
+import com.example.cleanarchitechture.entity.Person
+
+@Dao
+interface PersonDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(person: Person)
+
+    @Delete
+    fun delete(person: Person)
+
+    @Query("Select * From Person")
+    fun selectAll(): List<Person>
+}
