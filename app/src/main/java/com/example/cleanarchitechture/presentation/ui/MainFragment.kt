@@ -14,6 +14,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
@@ -45,7 +46,8 @@ class MainFragment : Fragment(), ItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        val factory = Factory(Dependencies.getPersonUseCase(requireContext()))
+        viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
         nameInput.doAfterTextChanged {
             viewModel.personName = it.toString()

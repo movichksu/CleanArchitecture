@@ -11,9 +11,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel (
+    private val personsUseCase: PersonUseCase
+        ): ViewModel() {
 
-    private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
+    //private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
     private var persons = MutableLiveData<List<Person>>(listOf())
     var personName: String = ""
     var personRate: Int = 0
