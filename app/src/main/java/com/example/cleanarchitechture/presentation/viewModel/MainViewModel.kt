@@ -1,9 +1,7 @@
 package com.example.cleanarchitechture.presentation.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.*
 import com.example.cleanarchitechture.entity.Person
@@ -11,9 +9,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+        app: Application
+) : AndroidViewModel(app) {
 
-    private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
+    private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase(getApplication<Application>()) }
     private var persons = MutableLiveData<List<Person>>(listOf())
     var personName: String = ""
     var personRate: Int = 0

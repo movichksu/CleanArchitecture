@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.util.Log
-import androidx.room.Room
 import com.example.cleanarchitechture.db.PersonDb
 import com.example.cleanarchitechture.entity.Person
 import com.example.cleanarchitechture.presentation.ui.MainFragment
