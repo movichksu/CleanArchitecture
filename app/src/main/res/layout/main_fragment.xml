@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,28 +9,31 @@
     tools:context=".presentation.ui.MainFragment">
 
     <EditText
-        android:id="@+id/first_input"
+        android:id="@+id/name_input"
         style="@style/input"
+        android:hint="@string/name_input_hint"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/second_input"
+        android:id="@+id/rate_input"
         style="@style/input"
+        android:hint="@string/rate_input_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_input" />
+        app:layout_constraintTop_toBottomOf="@+id/name_input" />
 
     <Button
-        android:id="@+id/calculate_btn"
+        android:id="@+id/add_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/calculate_btn_text"
         android:layout_marginTop="16dp"
+        android:text="@string/add_btn_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/second_input" />
+        app:layout_constraintTop_toBottomOf="@+id/rate_input" />
 
     <TextView
         android:id="@+id/calculation_state_text"
@@ -38,7 +42,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calculate_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/add_btn" />
 
     <TextView
         android:id="@+id/calculation_state_text"
@@ -50,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/calculate_btn" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/operations_list"
+        android:id="@+id/persons_list"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

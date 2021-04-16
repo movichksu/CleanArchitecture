@@ -1,27 +1,17 @@
 package com.example.cleanarchitechture
 
-import com.example.cleanarchitechture.data.OperationsLocalSource
-import com.example.cleanarchitechture.data.SumCalculator
+import com.example.cleanarchitechture.db.LocalDataBaseSource
 import com.example.cleanarchitechture.domain.*
 
 object Dependencies {
 
-    private val operationsRepository: OperationsRepository by lazy { OperationsLocalSource() }
+    private val personRepository: PersonRepository by lazy { LocalDataBaseSource(App.instance) }
 
-    private fun getCalculateRepository(): CalculateRepository {
-        return SumCalculator()
+    private fun getPersonsRepository(): PersonRepository {
+        return personRepository
     }
 
-    private fun getOperRepository(): OperationsRepository {
-        return operationsRepository
+    fun getPersonUseCase(): PersonUseCase {
+        return PersonUseCaseImpl(getPersonsRepository())
     }
-
-    fun getCalculateUseCase(): CalculateUseCase {
-        return CalculateUseCaseImpl(getCalculateRepository(), getOperRepository())
-    }
-
-    fun getOperationsUseCase(): OperationsUseCase {
-        return OperationsUseCaseImpl(getOperRepository())
-    }
-
 }
