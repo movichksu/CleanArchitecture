@@ -13,7 +13,7 @@ class SumCalculator : CalculateRepository {
         //delay(5000)
         withContext(Dispatchers.IO) {
             var sum = 0
-            for (i in 0..Int.MAX_VALUE) {
+            for (i in 0..Int.MAX_VALUE / 2) {
                 if (sum % 2 == 0) {
                     sum += i
                 } else {

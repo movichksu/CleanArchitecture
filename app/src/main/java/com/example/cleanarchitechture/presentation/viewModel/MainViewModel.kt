@@ -8,7 +8,9 @@ import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.CalculateUseCase
 import com.example.cleanarchitechture.domain.Operation
 import com.example.cleanarchitechture.domain.OperationsUseCase
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -19,13 +21,13 @@ class MainViewModel : ViewModel() {
     var first: String = ""
     var second: String = ""
 
-    private var operations = MutableLiveData<MutableList<Operation>>(mutableListOf())
+    private var operations = MutableLiveData<List<Operation>>(listOf())
 
     private var _calculationState = MutableLiveData<CalculationState>(CalculationState.Free)
     val calculationState: LiveData<CalculationState> = _calculationState
 
 
-    fun getOperations(): LiveData<MutableList<Operation>> {
+    fun getOperations(): LiveData<List<Operation>> {
         return operations
     }
 
@@ -35,7 +37,7 @@ class MainViewModel : ViewModel() {
         _calculationState.value = CalculationState.Loading
         viewModelScope.launch {
             rezult = calculateUseCase.calculate(first.toInt(), second.toInt())
-            operations.value = operationsUseCase.getOperations().toMutableList()
+            operations.value = operationsUseCase.getOperations()
             _calculationState.value = CalculationState.Rezult
             setFree()
         }
@@ -43,18 +45,23 @@ class MainViewModel : ViewModel() {
     }
 
     init {
-        operations.value = operationsUseCase.getOperations().toMutableList()
+        viewModelScope.launch {
+            operationsUseCase.getOperations().collect {
+                operations.value = it
+            }
+        }
     }
 
     suspend fun setFree() {
-        delay(3000)
+        delay(2000)
         _calculationState.value = CalculationState.Free
     }
 
-    fun onOperationSelected(operation: Operation) {
-        operationsUseCase.removeOperation(operation)
-        operations.value = operationsUseCase.getOperations().toMutableList()
-    }
+    fun onOperationSelected(operation: Operation) =
+            viewModelScope.launch {
+                operationsUseCase.removeOperation(operation)
+                operations.value = operationsUseCase.getOperations()
+            }
 
 
 }

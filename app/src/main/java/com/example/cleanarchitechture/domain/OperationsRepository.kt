@@ -1,9 +1,11 @@
 package com.example.cleanarchitechture.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface OperationsRepository {
 
-    fun getOperations(): List<Operation>
-    fun addOperation(operation: Operation)
-    fun removeOperation(operation: Operation)
+    suspend fun getOperations(): Flow<List<Operation>>
+    suspend fun addOperation(operation: Operation)
+    suspend fun removeOperation(operation: Operation)
 
 }

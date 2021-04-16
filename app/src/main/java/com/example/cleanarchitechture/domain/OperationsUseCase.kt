@@ -1,8 +1,11 @@
 package com.example.cleanarchitechture.domain
 
+import kotlinx.coroutines.flow.Flow
+
+
 interface OperationsUseCase {
 
-    fun getOperations(): List<Operation>
-    fun removeOperation(operation: Operation)
+    suspend fun getOperations(): Flow<List<Operation>>
+    suspend fun removeOperation(operation: Operation)
 
 }
