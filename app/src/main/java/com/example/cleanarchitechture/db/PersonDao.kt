@@ -13,5 +13,6 @@ interface PersonDao {
     fun delete(person: Person)
 
     @Query("Select * From Person")
-    fun selectAll(): List<Person>
+    fun selectAll(): Flow<List<Person>>
+
 }
