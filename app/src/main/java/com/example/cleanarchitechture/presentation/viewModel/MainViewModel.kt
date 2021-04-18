@@ -7,49 +7,64 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.*
 import com.example.cleanarchitechture.entity.Person
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
     private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
-    private var persons = MutableLiveData<List<Person>>(listOf())
     var personName: String = ""
-    var personRate: Int = 0
+    var personRate: String = ""
 
-    private var _calculationState = MutableLiveData<AddItemState>(AddItemState.Free)
-    val addItemState: LiveData<AddItemState> = _calculationState
+    private var persons = MutableLiveData<List<Person>>(listOf())
+    private var _itemState = MutableLiveData<AddItemState>(AddItemState.Free)
+    val addItemState: LiveData<AddItemState> = _itemState
 
+    private val disposable = CompositeDisposable()
 
     fun getPersons(): LiveData<List<Person>> {
         return persons
     }
 
     fun registerPerson() {
-        _calculationState.value = AddItemState.Loading
         viewModelScope.launch {
-            personsUseCase.registerPerson(personName, personRate)
-            _calculationState.value = AddItemState.Result
+            _itemState.value = AddItemState.Loading
+            personsUseCase.registerPerson(personName, personRate.toInt())
+            _itemState.value = AddItemState.Result
             setFree()
         }
     }
 
     init {
-        viewModelScope.launch {
-            personsUseCase.getPersons().collect {
+//        viewModelScope.launch {
+//            personsUseCase.getPersons().collect { personsList ->
+//                persons.value = personsList
+//                }
+//            }
+        val subscribe = personsUseCase.getPersonsRx()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
                 persons.value = it
             }
-        }
+        disposable.add(subscribe)
     }
 
     suspend fun setFree() {
         delay(2000)
-        _calculationState.value = AddItemState.Free
+        _itemState.value = AddItemState.Free
     }
 
     fun onPersonSelected(person: Person) =
-            viewModelScope.launch {
-                personsUseCase.removePerson(person)
-            }
+        viewModelScope.launch {
+            personsUseCase.removePerson(person)
+        }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
+    }
 }
