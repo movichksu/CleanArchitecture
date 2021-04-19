@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.*
 import com.example.cleanarchitechture.entity.Person
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
 
@@ -18,8 +20,8 @@ class MainViewModel : ViewModel() {
     var personName: String = ""
     var personRate: String = ""
 
-    private var _calculationState = MutableLiveData<AddItemState>(AddItemState.Free)
-    val addItemState: LiveData<AddItemState> = _calculationState
+    private var _addItemState = MutableLiveData<AddItemState>(AddItemState.Free)
+    val addItemState: LiveData<AddItemState> = _addItemState
 
 
     fun getPersons(): LiveData<List<Person>> {
@@ -28,9 +30,11 @@ class MainViewModel : ViewModel() {
 
     fun registerPerson() {
         viewModelScope.launch {
-            _calculationState.value = AddItemState.Loading
-            personsUseCase.registerPerson(personName, personRate.toInt())
-            _calculationState.value = AddItemState.Result
+            _addItemState.value = AddItemState.Loading
+            withContext(Dispatchers.IO) {
+                personsUseCase.registerPerson(personName, personRate.toInt())
+            }
+            _addItemState.value = AddItemState.Result
             setFree()
         }
     }
@@ -45,7 +49,7 @@ class MainViewModel : ViewModel() {
 
     suspend fun setFree() {
         delay(2000)
-        _calculationState.value = AddItemState.Free
+        _addItemState.value = AddItemState.Free
     }
 
     fun onPersonSelected(person: Person) =

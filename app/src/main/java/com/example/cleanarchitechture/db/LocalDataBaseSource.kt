@@ -18,7 +18,7 @@ class LocalDataBaseSource(
         context,
         PersonDb::class.java,
         "personDataBase")
-        .allowMainThreadQueries().build()
+        .build()
 
     override suspend fun getPersons(): Flow<List<Person>> =
         db.getPersonDao().selectAll()
