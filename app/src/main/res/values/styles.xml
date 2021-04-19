@@ -2,13 +2,26 @@
 
 
 <resources>
-    <style name="input" parent="Widget.AppCompat.EditText">
+    <style name="input_style" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/purple_200</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:textSize">@dimen/item_text_size</item>
+        <item name="android:layout_margin">@dimen/components_margin_top</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:inputType">number</item>
+    </style>
+
+    <style name="recyclerview_style" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginTop">@dimen/components_margin_top</item>
+    </style>
+
+    <style name="person_view_style" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/item_margin</item>
+        <item name="android:textSize">@dimen/item_text_size</item>
     </style>
 
 </resources>

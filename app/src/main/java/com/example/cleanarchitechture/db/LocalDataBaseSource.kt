@@ -12,17 +12,17 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 
 class LocalDataBaseSource(
-    context: Context
+        context: Context
 ) : PersonRepository {
 
     private val db = Room.databaseBuilder(
-        context,
-        PersonDb::class.java,
-        "personDataBase")
-        .build()
+            context,
+            PersonDb::class.java,
+            "personDataBase")
+            .build()
 
     override fun getPersons(): Flow<List<Person>> =
-        db.getPersonDao().selectAll()
+            db.getPersonDao().selectAll()
 
     override suspend fun removePerson(person: Person) {
         withContext(Dispatchers.IO) {
@@ -37,5 +37,5 @@ class LocalDataBaseSource(
     }
 
     override fun getPersonsRx(): Observable<List<Person>> =
-        db.getPersonDao().selectAllRx()
+            db.getPersonDao().selectAllRx().share()
 }
