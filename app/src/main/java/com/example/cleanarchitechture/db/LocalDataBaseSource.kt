@@ -24,10 +24,14 @@ class LocalDataBaseSource(
         db.getPersonDao().selectAll()
 
     override suspend fun removePerson(person: Person) {
-        db.getPersonDao().delete(person)
+        withContext(Dispatchers.IO) {
+            db.getPersonDao().delete(person)
+        }
     }
 
     override suspend fun addPerson(person: Person) {
-        db.getPersonDao().insert(person)
+        withContext(Dispatchers.IO) {
+            db.getPersonDao().insert(person)
+        }
     }
 }

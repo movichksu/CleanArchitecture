@@ -51,7 +51,7 @@ class MainFragment : Fragment(), ItemClickListener {
             viewModel.personName = it.toString()
         }
         rateInput.doAfterTextChanged {
-            viewModel.personRate = it.toString().toInt()
+            viewModel.personRate = it.toString()
         }
 
         addPersonBtn.setOnClickListener {

@@ -16,7 +16,7 @@ class MainViewModel : ViewModel() {
     private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
     private var persons = MutableLiveData<List<Person>>(listOf())
     var personName: String = ""
-    var personRate: Int = 0
+    var personRate: String = ""
 
     private var _calculationState = MutableLiveData<AddItemState>(AddItemState.Free)
     val addItemState: LiveData<AddItemState> = _calculationState
@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
     fun registerPerson() {
         viewModelScope.launch {
             _calculationState.value = AddItemState.Loading
-            personsUseCase.registerPerson(personName, personRate)
+            personsUseCase.registerPerson(personName, personRate.toInt())
             _calculationState.value = AddItemState.Result
             setFree()
         }

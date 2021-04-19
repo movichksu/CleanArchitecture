@@ -2,6 +2,7 @@ package com.example.cleanarchitechture.db
 
 import androidx.room.*
 import com.example.cleanarchitechture.entity.Person
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PersonDao {
