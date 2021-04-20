@@ -22,9 +22,11 @@ class PersonAdapter internal constructor(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val person = persons[position]
-        viewHolder.text.text = person.toString()
+        viewHolder.personName.text = person.name
+        viewHolder.personRate.text = " - ${person.rate}"
         viewHolder.container.setOnClickListener {
             listener?.onClick(person)
+            notifyItemRemoved(position)
         }
     }
 
@@ -37,7 +39,8 @@ class PersonAdapter internal constructor(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val container: View = view.findViewById(R.id.person_container)
-        val text: TextView = view.findViewById<TextView>(R.id.person_text)
+        val personName: TextView = view.findViewById<TextView>(R.id.person_name_text)
+        val personRate: TextView = view.findViewById<TextView>(R.id.person_rate_text)
 
     }
 
