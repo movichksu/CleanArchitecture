@@ -9,14 +9,14 @@ import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
 
 class PersonAdapter internal constructor(
-        private var persons: List<Person>
+    private var persons: List<Person>
 ) : RecyclerView.Adapter<PersonAdapter.ViewHolder>() {
 
     private var listener: ItemClickListener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.person_item, viewGroup, false)
+            .inflate(R.layout.person_item, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -41,7 +41,6 @@ class PersonAdapter internal constructor(
         val container: View = view.findViewById(R.id.person_container)
         val personName: TextView = view.findViewById<TextView>(R.id.person_name_text)
         val personRate: TextView = view.findViewById<TextView>(R.id.person_rate_text)
-
     }
 
     fun setListener(itemClickListener: ItemClickListener?) {

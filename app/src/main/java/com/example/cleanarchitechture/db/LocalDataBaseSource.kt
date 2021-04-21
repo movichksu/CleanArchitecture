@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.cleanarchitechture.domain.PersonRepository
 import com.example.cleanarchitechture.entity.Person
+import io.reactivex.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -11,16 +12,17 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 
 class LocalDataBaseSource(
-        context: Context
+    context: Context
 ) : PersonRepository {
 
     private val db = Room.databaseBuilder(
         context,
         PersonDb::class.java,
-        "personDataBase")
+        "personDataBase"
+    )
         .build()
 
-    override suspend fun getPersons(): Flow<List<Person>> =
+    override fun getPersons(): Flow<List<Person>> =
         db.getPersonDao().selectAll()
 
     override suspend fun removePerson(person: Person) {
@@ -34,4 +36,7 @@ class LocalDataBaseSource(
             db.getPersonDao().insert(person)
         }
     }
+
+    override fun getPersonsRx(): Observable<List<Person>> =
+        db.getPersonDao().selectAllRx().share()
 }

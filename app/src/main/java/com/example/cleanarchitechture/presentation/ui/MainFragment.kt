@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,12 +20,16 @@ import com.example.cleanarchitechture.presentation.adapter.ItemClickListener
 import com.example.cleanarchitechture.presentation.adapter.PersonAdapter
 import com.example.cleanarchitechture.presentation.viewModel.AddItemState
 import com.example.cleanarchitechture.presentation.viewModel.MainViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class MainFragment : Fragment(), ItemClickListener {
 
     companion object {
         fun newInstance() =
-                MainFragment()
+            MainFragment()
     }
 
     private lateinit var viewModel: MainViewModel
@@ -34,11 +37,16 @@ class MainFragment : Fragment(), ItemClickListener {
     private lateinit var rateInput: EditText
     private lateinit var addPersonBtn: Button
     private lateinit var personsList: RecyclerView
+    private lateinit var filteredPersonsList: RecyclerView
     private lateinit var stateText: TextView
-    private var adapter = PersonAdapter(listOf())
+    private var fullListAdapter = PersonAdapter(listOf())
+    private var filteredListAdapter = PersonAdapter(listOf())
+    private val disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
 
     }
@@ -54,25 +62,31 @@ class MainFragment : Fragment(), ItemClickListener {
             viewModel.personRate = it.toString()
         }
 
-        addPersonBtn.setOnClickListener {
-            if (nameInput.text.isEmpty() || rateInput.text.isEmpty()) {
-                val toast = Toast.makeText(requireContext(), "input fields are empty!", Toast.LENGTH_SHORT)
-                toast.show()
+        val observable = Observable.create<Unit> { emitter ->
+            addPersonBtn.setOnClickListener {
+                emitter.onNext(Unit)
             }
-            else viewModel.registerPerson()
         }
+        val subscribe = observable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { viewModel.registerPerson() }
+        disposable.add(subscribe)
 
         viewModel.getPersons().observe(viewLifecycleOwner, Observer {
-            adapter.setData(it)
+            fullListAdapter.setData(it)
+        })
+        viewModel.getFilteredPersons().observe(viewLifecycleOwner, Observer {
+            filteredListAdapter.setData(it)
         })
 
         viewModel.addItemState.observe(viewLifecycleOwner, Observer {
             stateText.text = getString(
-                    when (it) {
-                        AddItemState.Free -> R.string.free_state
-                        AddItemState.Loading -> R.string.loading_state
-                        AddItemState.Result -> R.string.rezult_state
-                    }
+                when (it) {
+                    AddItemState.Free -> R.string.free_state
+                    AddItemState.Loading -> R.string.loading_state
+                    AddItemState.Result -> R.string.result_state
+                }
             )
             when (it) {
                 AddItemState.Free -> addPersonBtn.isEnabled = true
@@ -87,13 +101,18 @@ class MainFragment : Fragment(), ItemClickListener {
 
         addPersonBtn = view.findViewById(R.id.add_btn)
         personsList = view.findViewById(R.id.persons_list)
+        filteredPersonsList = view.findViewById(R.id.filtered_persons_list)
         stateText = view.findViewById(R.id.state_text)
         nameInput = view.findViewById(R.id.name_input)
         rateInput = view.findViewById(R.id.rate_input)
 
         personsList.layoutManager = LinearLayoutManager(requireContext())
-        personsList.adapter = adapter
-        adapter.setListener(this)
+        personsList.adapter = fullListAdapter
+        fullListAdapter.setListener(this)
+
+        filteredPersonsList.layoutManager = LinearLayoutManager(requireContext())
+        filteredPersonsList.adapter = filteredListAdapter
+        filteredListAdapter.setListener(this)
     }
 
     override fun onClick(person: Person) {
@@ -101,7 +120,8 @@ class MainFragment : Fragment(), ItemClickListener {
     }
 
     override fun onDestroyView() {
-        adapter.setListener(null)
+        fullListAdapter.setListener(null)
+        filteredListAdapter.setListener(null)
         super.onDestroyView()
     }
 }

@@ -10,7 +10,7 @@
 
     <EditText
         android:id="@+id/name_input"
-        style="@style/input"
+        style="@style/input_style"
         android:hint="@string/name_input_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +19,7 @@
 
     <EditText
         android:id="@+id/rate_input"
-        style="@style/input"
+        style="@style/input_style"
         android:hint="@string/rate_input_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
         android:id="@+id/add_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/components_margin_top"
         android:text="@string/add_btn_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,28 +39,23 @@
         android:id="@+id/state_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/components_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_btn" />
 
-    <TextView
-        android:id="@+id/calculation_state_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calculate_btn" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/persons_list"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        style="@style/recyclerview_style"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/state_text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/filtered_persons_list"
+        style="@style/recyclerview_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/state_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,18 @@
 package com.example.cleanarchitechture.domain
 
 import com.example.cleanarchitechture.entity.Person
+import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 
 class PersonUseCaseImpl(
-        private val personRepository: PersonRepository
+    private val personRepository: PersonRepository
 ) : PersonUseCase {
-    override suspend fun getPersons(): Flow<List<Person>> {
+    override fun getPersons(): Flow<List<Person>> {
         return personRepository.getPersons()
+    }
+
+    override fun getPersonsRx(): Observable<List<Person>> {
+        return personRepository.getPersonsRx()
     }
 
     override suspend fun removePerson(person: Person) {
