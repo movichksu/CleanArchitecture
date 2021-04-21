@@ -60,40 +60,40 @@ class MainViewModel : ViewModel() {
 //                }
 //            }
         val subscribe = personsUseCase.getPersonsRx()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    Log.d(TAG, Thread.currentThread().name)
-                }
-                .observeOn(Schedulers.io())
-                .map { persons ->
-                    Log.d(TAG, Thread.currentThread().name)
-                    persons.sortedBy { it.name }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Log.d(TAG, Thread.currentThread().name)
-                    persons.value = it
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                Log.d(TAG, Thread.currentThread().name)
+            }
+            .observeOn(Schedulers.io())
+            .map { persons ->
+                Log.d(TAG, Thread.currentThread().name)
+                persons.sortedBy { it.name }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                Log.d(TAG, Thread.currentThread().name)
+                persons.value = it
+            }
 
         val filteredSubscribe = personsUseCase.getPersonsRx()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    Log.d(TAG, Thread.currentThread().name)
-                }
-                .observeOn(Schedulers.io())
-                .map { persons ->
-                    Log.d(TAG, Thread.currentThread().name)
-                    persons.filter { it.rate >= 5 }
-                            .sortedBy { it.rate }
-                            .filter { it.name.contains("a") }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Log.d(TAG, Thread.currentThread().name)
-                    filteredPersons.value = it
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                Log.d(TAG, Thread.currentThread().name)
+            }
+            .observeOn(Schedulers.io())
+            .map { persons ->
+                Log.d(TAG, Thread.currentThread().name)
+                persons.filter { it.rate >= 5 }
+                    .sortedBy { it.rate }
+                    .filter { it.name.contains("a") }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                Log.d(TAG, Thread.currentThread().name)
+                filteredPersons.value = it
+            }
         disposable.add(subscribe)
         disposable.add(filteredSubscribe)
     }
@@ -104,9 +104,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun onPersonSelected(person: Person) =
-            viewModelScope.launch {
-                personsUseCase.removePerson(person)
-            }
+        viewModelScope.launch {
+            personsUseCase.removePerson(person)
+        }
 
     override fun onCleared() {
         super.onCleared()

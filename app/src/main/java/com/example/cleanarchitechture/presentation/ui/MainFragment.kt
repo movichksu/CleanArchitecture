@@ -68,9 +68,9 @@ class MainFragment : Fragment(), ItemClickListener {
             }
         }
         val subscribe = observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { viewModel.registerPerson() }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { viewModel.registerPerson() }
         disposable.add(subscribe)
 
         viewModel.getPersons().observe(viewLifecycleOwner, Observer {
@@ -82,11 +82,11 @@ class MainFragment : Fragment(), ItemClickListener {
 
         viewModel.addItemState.observe(viewLifecycleOwner, Observer {
             stateText.text = getString(
-                    when (it) {
-                        AddItemState.Free -> R.string.free_state
-                        AddItemState.Loading -> R.string.loading_state
-                        AddItemState.Result -> R.string.rezult_state
-                    }
+                when (it) {
+                    AddItemState.Free -> R.string.free_state
+                    AddItemState.Loading -> R.string.loading_state
+                    AddItemState.Result -> R.string.result_state
+                }
             )
             when (it) {
                 AddItemState.Free -> addPersonBtn.isEnabled = true
@@ -121,6 +121,7 @@ class MainFragment : Fragment(), ItemClickListener {
 
     override fun onDestroyView() {
         fullListAdapter.setListener(null)
+        filteredListAdapter.setListener(null)
         super.onDestroyView()
     }
 }

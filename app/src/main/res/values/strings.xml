@@ -2,7 +2,7 @@
     <string name="app_name">CleanArchitecture</string>
     <string name="free_state">FREE</string>
     <string name="loading_state">LOADING</string>
-    <string name="rezult_state">REZULT</string>
+    <string name="result_state">RESULT</string>
     <string name="add_btn_text">add person</string>
     <string name="rate_input_hint">Rate</string>
     <string name="name_input_hint">Name</string>
