@@ -26,6 +26,7 @@ class PersonAdapter internal constructor(
         viewHolder.personRate.text = " - ${person.rate}"
         viewHolder.container.setOnClickListener {
             listener?.onClick(person)
+            notifyItemRemoved(position)
         }
     }
 
