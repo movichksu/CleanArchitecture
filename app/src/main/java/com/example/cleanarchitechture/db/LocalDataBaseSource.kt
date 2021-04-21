@@ -22,7 +22,7 @@ class LocalDataBaseSource(
     )
         .build()
 
-    override fun getPersons(): List<Person>{
+    override suspend fun getPersons(): List<Person>{
         return emptyList()
     }
 

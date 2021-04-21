@@ -3,6 +3,8 @@ package com.example.cleanarchitechture.server
 import com.example.cleanarchitechture.domain.SimplifyPersonRepository
 import com.example.cleanarchitechture.entity.Person
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -13,9 +15,13 @@ class CloudSource: SimplifyPersonRepository {
         .build()
     val apiService: APIService = retrofit.create(APIService::class.java)
 
-    override fun getPersons(): List<Person> {
-        val requestResult = apiService.getPersons()
-        return requestResult.execute().body()!!
+    override suspend fun getPersons(): List<Person> {
+        var Result: List<Person> = listOf()
+        withContext(Dispatchers.IO) {
+            val requestResult = apiService.getPersons()
+            Result=requestResult.execute().body()!!
+        }
+        return Result
     }
 
     override suspend fun addPerson(person: Person) {

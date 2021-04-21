@@ -13,7 +13,7 @@ class PersonUseCaseImpl(
         return personRepository.subscribePersons()
     }
 
-    override fun getPersons(): List<Person> {
+    override suspend fun getPersons(): List<Person> {
         return simplifyPersonRepository.getPersons()
     }
 

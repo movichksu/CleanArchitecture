@@ -11,6 +11,6 @@ interface PersonRepository: SimplifyPersonRepository {
 }
 
 interface SimplifyPersonRepository{
-    fun getPersons(): List<Person>
+    suspend fun getPersons(): List<Person>
     suspend fun addPerson(person: Person)
 }
