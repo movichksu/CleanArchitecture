@@ -2,9 +2,11 @@ package com.example.cleanarchitechture
 
 import com.example.cleanarchitechture.db.LocalDataBaseSource
 import com.example.cleanarchitechture.domain.*
+import com.example.cleanarchitechture.server.CloudSource
 
 object Dependencies {
 
+    private val cloudSource: SimplifyPersonRepository by lazy{CloudSource()}
     private val personRepository: PersonRepository by lazy { LocalDataBaseSource(App.instance) }
 
     private fun getPersonsRepository(): PersonRepository {
@@ -12,6 +14,6 @@ object Dependencies {
     }
 
     fun getPersonUseCase(): PersonUseCase {
-        return PersonUseCaseImpl(getPersonsRepository())
+        return PersonUseCaseImpl(getPersonsRepository(), cloudSource)
     }
 }

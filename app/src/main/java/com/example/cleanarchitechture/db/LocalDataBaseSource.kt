@@ -22,8 +22,9 @@ class LocalDataBaseSource(
     )
         .build()
 
-    override fun getPersons(): Flow<List<Person>> =
-        db.getPersonDao().selectAll()
+    override fun getPersons(): List<Person>{
+        return emptyList()
+    }
 
     override suspend fun removePerson(person: Person) {
         withContext(Dispatchers.IO) {
@@ -39,4 +40,7 @@ class LocalDataBaseSource(
 
     override fun getPersonsRx(): Observable<List<Person>> =
         db.getPersonDao().selectAllRx().share()
+
+    override fun subscribePersons(): Flow<List<Person>> =
+        db.getPersonDao().selectAll()
 }
