@@ -1,5 +1,10 @@
 package com.example.cleanarchitechture.presentation.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -42,6 +47,8 @@ class MainFragment : Fragment(), ItemClickListener {
     private var fullListAdapter = PersonAdapter(listOf())
     private var filteredListAdapter = PersonAdapter(listOf())
     private val disposable: CompositeDisposable = CompositeDisposable()
+
+    private val batteryBroadcast= BatteryLevelBroadcastReceiver()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,6 +122,16 @@ class MainFragment : Fragment(), ItemClickListener {
         filteredListAdapter.setListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_LOW))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(batteryBroadcast)
+    }
+
     override fun onClick(person: Person) {
         viewModel.onPersonSelected(person)
     }
@@ -124,4 +141,14 @@ class MainFragment : Fragment(), ItemClickListener {
         filteredListAdapter.setListener(null)
         super.onDestroyView()
     }
+
+
+    inner class BatteryLevelBroadcastReceiver: BroadcastReceiver(){
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val batteryLevel = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            rateInput.setText("$batteryLevel")
+        }
+    }
+
 }
