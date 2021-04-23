@@ -27,6 +27,6 @@ class PersonUseCaseImpl(
 
     override suspend fun registerPerson(name: String, rate: Int) {
         val person = Person(name, rate)
-        personRepository.addPerson(person)
+        simplifyPersonRepository.addPerson(person)
     }
 }
