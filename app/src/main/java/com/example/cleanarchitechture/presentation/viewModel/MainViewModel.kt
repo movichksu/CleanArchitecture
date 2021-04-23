@@ -44,11 +44,13 @@ class MainViewModel : ViewModel() {
 
     fun registerPerson() {
         viewModelScope.launch {
-            _itemState.value = AddItemState.Loading
-            withContext(Dispatchers.IO) {
+
+
+                _itemState.value = AddItemState.Loading
                 personsUseCase.registerPerson(personName, personRate.toInt())
-            }
-            _itemState.value = AddItemState.Result
+                _itemState.value = AddItemState.Result
+
+
             setFree()
         }
     }
