@@ -7,10 +7,10 @@ import com.example.cleanarchitechture.server.CloudSource
 object Dependencies {
 
     private val cloudSource: SimplifyPersonRepository by lazy{CloudSource()}
-    private val personRepository: PersonRepository by lazy { LocalDataBaseSource(App.instance) }
+    private val LocalDatabaseSource: PersonRepository by lazy { LocalDataBaseSource(App.instance) }
 
     private fun getPersonsRepository(): PersonRepository {
-        return personRepository
+        return LocalDatabaseSource
     }
 
     fun getPersonUseCase(): PersonUseCase {
