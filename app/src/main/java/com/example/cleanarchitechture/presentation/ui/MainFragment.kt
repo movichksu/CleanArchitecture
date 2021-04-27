@@ -124,7 +124,7 @@ class MainFragment : Fragment(), ItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_LOW))
+        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
     }
 
     override fun onPause() {
