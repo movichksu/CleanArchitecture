@@ -141,6 +141,16 @@ class MainFragment : Fragment(), ItemClickListener {
         requireActivity().unregisterReceiver(batteryBroadcast)
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_LOW))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(batteryBroadcast)
+    }
+
     override fun onClick(person: Person) {
         viewModel.onPersonSelected(person)
     }
