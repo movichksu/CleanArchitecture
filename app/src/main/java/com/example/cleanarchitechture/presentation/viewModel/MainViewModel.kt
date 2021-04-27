@@ -45,7 +45,7 @@ class MainViewModel : ViewModel() {
     fun registerPerson() {
         viewModelScope.launch {
             _itemState.value = AddItemState.Loading
-            personsUseCase.registerPerson(personName, rate)
+            personsUseCase.registerPerson(personName, personRate.toFloat())
             _itemState.value = AddItemState.Result
             setFree()
         }
