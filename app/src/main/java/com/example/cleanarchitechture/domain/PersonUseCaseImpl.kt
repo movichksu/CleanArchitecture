@@ -25,7 +25,7 @@ class PersonUseCaseImpl(
         personRepository.removePerson(person)
     }
 
-    override suspend fun registerPerson(name: String, rate: Int) {
+    override suspend fun registerPerson(name: String, rate: Float) {
         val person = Person(name, rate)
         simplifyPersonRepository.addPerson(person)
     }

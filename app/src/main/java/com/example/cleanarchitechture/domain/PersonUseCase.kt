@@ -9,5 +9,5 @@ interface PersonUseCase {
     suspend fun getPersons(): List<Person>
     fun getPersonsRx(): Observable<List<Person>>
     suspend fun removePerson(person: Person)
-    suspend fun registerPerson(name: String, rate: Int)
+    suspend fun registerPerson(name: String, rate: Float)
 }

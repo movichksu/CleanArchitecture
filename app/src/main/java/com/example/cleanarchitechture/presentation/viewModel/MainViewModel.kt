@@ -44,58 +44,22 @@ class MainViewModel : ViewModel() {
 
     fun registerPerson() {
         viewModelScope.launch {
-
-
                 _itemState.value = AddItemState.Loading
-                personsUseCase.registerPerson(personName, personRate.toInt())
+            val rate = personRate.toFloat()
+                personsUseCase.registerPerson(personName, rate)
                 _itemState.value = AddItemState.Result
-
-
             setFree()
         }
     }
 
-    init {
+    fun updatePersons() {
         viewModelScope.launch {
             persons.value = personsUseCase.getPersons()
-            }
-//        val subscribe = personsUseCase.getPersonsRx()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnNext {
-//                Log.d(TAG, Thread.currentThread().name)
-//            }
-//            .observeOn(Schedulers.io())
-//            .map { persons ->
-//                Log.d(TAG, Thread.currentThread().name)
-//                persons.sortedBy { it.name }
-//            }
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                Log.d(TAG, Thread.currentThread().name)
-//                persons.value = it
-//            }
-//
-//        val filteredSubscribe = personsUseCase.getPersonsRx()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnNext {
-//                Log.d(TAG, Thread.currentThread().name)
-//            }
-//            .observeOn(Schedulers.io())
-//            .map { persons ->
-//                Log.d(TAG, Thread.currentThread().name)
-//                persons.filter { it.rate >= 5 }
-//                    .sortedBy { it.rate }
-//                    .filter { it.name.contains("a") }
-//            }
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                Log.d(TAG, Thread.currentThread().name)
-//                filteredPersons.value = it
-//            }
-//        disposable.add(subscribe)
-//        disposable.add(filteredSubscribe)
+        }
+    }
+
+    init {
+        updatePersons()
     }
 
     suspend fun setFree() {

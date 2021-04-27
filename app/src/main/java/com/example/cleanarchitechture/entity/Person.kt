@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity
 data class Person(
         @PrimaryKey val name: String,
-        val rate: Int
+        val rate: Float
 )

@@ -18,6 +18,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
@@ -46,6 +47,8 @@ class MainFragment : Fragment(), ItemClickListener {
     private lateinit var stateText: TextView
     private var fullListAdapter = PersonAdapter(listOf())
     private var filteredListAdapter = PersonAdapter(listOf())
+
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     private val batteryBroadcast= BatteryLevelBroadcastReceiver()
@@ -68,6 +71,9 @@ class MainFragment : Fragment(), ItemClickListener {
         rateInput.doAfterTextChanged {
             viewModel.personRate = it.toString()
         }
+        swipeRefresh.setOnRefreshListener {
+            viewModel.updatePersons()
+        }
 
         val observable = Observable.create<Unit> { emitter ->
             addPersonBtn.setOnClickListener {
@@ -82,6 +88,7 @@ class MainFragment : Fragment(), ItemClickListener {
 
         viewModel.getPersons().observe(viewLifecycleOwner, Observer {
             fullListAdapter.setData(it)
+            swipeRefresh.isRefreshing = false
         })
         viewModel.getFilteredPersons().observe(viewLifecycleOwner, Observer {
             filteredListAdapter.setData(it)
@@ -120,6 +127,8 @@ class MainFragment : Fragment(), ItemClickListener {
         filteredPersonsList.layoutManager = LinearLayoutManager(requireContext())
         filteredPersonsList.adapter = filteredListAdapter
         filteredListAdapter.setListener(this)
+
+        swipeRefresh = view.findViewById(R.id.swipe_refresh)
     }
 
     override fun onResume() {
