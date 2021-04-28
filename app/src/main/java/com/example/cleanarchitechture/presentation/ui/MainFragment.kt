@@ -19,8 +19,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.presentation.PersonService
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
 import com.example.cleanarchitechture.presentation.adapter.ItemClickListener
 import com.example.cleanarchitechture.presentation.adapter.PersonAdapter
@@ -77,6 +79,11 @@ class MainFragment : Fragment(), ItemClickListener {
 
         val observable = Observable.create<Unit> { emitter ->
             addPersonBtn.setOnClickListener {
+                val addPersonServiceIntent = Intent(requireContext(), PersonService::class.java).apply {
+                    this.putExtra(Constants.PERSON_NAME, "n")
+                    this.putExtra(Constants.PERSON_RATE, 0)
+                }
+                requireActivity().startService(addPersonServiceIntent)
                 emitter.onNext(Unit)
             }
         }
@@ -129,16 +136,6 @@ class MainFragment : Fragment(), ItemClickListener {
         filteredListAdapter.setListener(this)
 
         swipeRefresh = view.findViewById(R.id.swipe_refresh)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        requireActivity().unregisterReceiver(batteryBroadcast)
     }
 
     override fun onResume() {
