@@ -1,12 +1,10 @@
 package com.example.cleanarchitechture.presentation.ui
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.BatteryManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +51,32 @@ class MainFragment : Fragment(), ItemClickListener {
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    private val batteryBroadcast= BatteryLevelBroadcastReceiver()
+    private val batteryBroadcast = BatteryLevelBroadcastReceiver()
+    private val addedPersonBroadcast = AddedPersonBroadcastReceiver()
+
+    private var personService: PersonService? = null
+    private var boundToPersonService: Boolean = false
+    private var currentPersonFlag = false
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            boundToPersonService = true
+            personService = (service as PersonService.PersonServiceBinder).getService()
+            if (currentPersonFlag) {
+                personService?.startAddPersonProcess(
+                    viewModel.personName,
+                    viewModel.personRate.toFloat()
+                )
+                currentPersonFlag = false
+            }
+
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            boundToPersonService = false
+            personService = null
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,12 +102,8 @@ class MainFragment : Fragment(), ItemClickListener {
 
         val observable = Observable.create<Unit> { emitter ->
             addPersonBtn.setOnClickListener {
-                val addPersonServiceIntent = Intent(requireContext(), PersonService::class.java).apply {
-                    this.putExtra(Constants.PERSON_NAME, "n")
-                    this.putExtra(Constants.PERSON_RATE, 0)
-                }
-                requireActivity().startService(addPersonServiceIntent)
-                emitter.onNext(Unit)
+                handleAddPersonClick()
+                // emitter.onNext(Unit)
             }
         }
         val subscribe = observable
@@ -138,14 +157,43 @@ class MainFragment : Fragment(), ItemClickListener {
         swipeRefresh = view.findViewById(R.id.swipe_refresh)
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().registerReceiver(batteryBroadcast, IntentFilter(Intent.ACTION_BATTERY_LOW))
+    private fun handleAddPersonClick() {
+        if (boundToPersonService) {
+            personService?.startAddPersonProcess(
+                viewModel.personName,
+                viewModel.personRate.toFloat()
+            )
+        } else {
+            val addPersonServiceIntent = Intent(requireContext(), PersonService::class.java).apply {
+                this.putExtra(Constants.PERSON_NAME, viewModel.personName)
+                this.putExtra(Constants.PERSON_RATE, viewModel.personRate.toFloat())
+                currentPersonFlag = true
+            }
+            requireActivity().bindService(
+                addPersonServiceIntent,
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+            )
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStart() {
+        super.onStart()
+        requireActivity().registerReceiver(
+            batteryBroadcast,
+            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        )
+        requireActivity().registerReceiver(
+            addedPersonBroadcast,
+            IntentFilter(Constants.ADDED_PERSON_ACTION)
+        )
+
+    }
+
+    override fun onStop() {
+        super.onStop()
         requireActivity().unregisterReceiver(batteryBroadcast)
+        requireActivity().unregisterReceiver(addedPersonBroadcast)
     }
 
     override fun onClick(person: Person) {
@@ -155,15 +203,23 @@ class MainFragment : Fragment(), ItemClickListener {
     override fun onDestroyView() {
         fullListAdapter.setListener(null)
         filteredListAdapter.setListener(null)
+        requireActivity().unbindService(serviceConnection)
         super.onDestroyView()
     }
 
 
-    inner class BatteryLevelBroadcastReceiver: BroadcastReceiver(){
+    inner class BatteryLevelBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             val batteryLevel = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
             rateInput.setText("$batteryLevel")
+        }
+    }
+
+    inner class AddedPersonBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModel.updatePersons()
         }
     }
 

@@ -53,7 +53,11 @@ class MainViewModel : ViewModel() {
 
     fun updatePersons() {
         viewModelScope.launch {
-            persons.value = personsUseCase.getPersons()
+            personsUseCase.getPersons().also {
+                withContext(Dispatchers.Main) {
+                    persons.value = it
+                }
+            }
         }
     }
 

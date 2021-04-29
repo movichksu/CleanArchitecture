@@ -22,7 +22,7 @@ class LocalDataBaseSource(
     )
         .build()
 
-    override suspend fun getPersons(): List<Person>{
+    override suspend fun getPersons(): List<Person> {
         return emptyList()
     }
 
@@ -32,10 +32,11 @@ class LocalDataBaseSource(
         }
     }
 
-    override suspend fun addPerson(person: Person) {
+    override suspend fun addPerson(person: Person): Boolean {
         withContext(Dispatchers.IO) {
             db.getPersonDao().insert(person)
         }
+        return true
     }
 
     override fun getPersonsRx(): Observable<List<Person>> =

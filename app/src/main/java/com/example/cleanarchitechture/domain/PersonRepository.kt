@@ -4,13 +4,13 @@ import com.example.cleanarchitechture.entity.Person
 import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 
-interface PersonRepository: SimplifyPersonRepository {
+interface PersonRepository : SimplifyPersonRepository {
     suspend fun removePerson(person: Person)
     fun getPersonsRx(): Observable<List<Person>>
     fun subscribePersons(): Flow<List<Person>>
 }
 
-interface SimplifyPersonRepository{
+interface SimplifyPersonRepository {
     suspend fun getPersons(): List<Person>
-    suspend fun addPerson(person: Person)
+    suspend fun addPerson(person: Person): Boolean
 }
