@@ -41,7 +41,7 @@ class CloudSource : SimplifyPersonRepository {
     override suspend fun addPerson(person: Person): Boolean {
         val response: Boolean
         withContext(Dispatchers.IO) {
-            delay(2000)
+            delay(5000)
             response = apiService.addPerson(person).isSuccessful
         }
         return response

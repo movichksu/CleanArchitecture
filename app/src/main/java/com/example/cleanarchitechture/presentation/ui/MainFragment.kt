@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.app.JobIntentService
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import com.example.cleanarchitechture.presentation.PersonService
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
 import com.example.cleanarchitechture.presentation.adapter.ItemClickListener
 import com.example.cleanarchitechture.presentation.adapter.PersonAdapter
+import com.example.cleanarchitechture.presentation.service.GetPersonService
 import com.example.cleanarchitechture.presentation.viewModel.AddItemState
 import com.example.cleanarchitechture.presentation.viewModel.MainViewModel
 import io.reactivex.Observable
@@ -98,8 +100,15 @@ class MainFragment : Fragment(), ItemClickListener {
         }
         swipeRefresh.setOnRefreshListener {
             viewModel.updatePersons()
+//            Intent(context, GetPersonService::class.java).also {
+//                JobIntentService.enqueueWork(
+//                        requireContext(),
+//                        GetPersonService::class.java,
+//                        123,
+//                        Intent(it)
+//                )
+//            }
         }
-
         val observable = Observable.create<Unit> { emitter ->
             addPersonBtn.setOnClickListener {
                 handleAddPersonClick()

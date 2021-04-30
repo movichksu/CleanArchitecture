@@ -14,7 +14,11 @@ class PersonUseCaseImpl(
     }
 
     override suspend fun getPersons(): List<Person> {
-        return simplifyPersonRepository.getPersons()
+        val persons = simplifyPersonRepository.getPersons()
+        persons.forEach {
+            personRepository.addPerson(it)
+        }
+        return persons
     }
 
     override fun getPersonsRx(): Observable<List<Person>> {

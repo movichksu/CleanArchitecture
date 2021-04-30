@@ -23,6 +23,11 @@
             android:enabled="true"
             android:name=".presentation.PersonService"
         />
+        <service
+            android:exported="false"
+            android:name=".presentation.service.GetPersonService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            />
     </application>
 
 </manifest>

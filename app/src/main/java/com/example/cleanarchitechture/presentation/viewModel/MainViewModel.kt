@@ -5,15 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.cleanarchitechture.App
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.*
 import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.presentation.worker.getPersonsWorker
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -52,17 +57,31 @@ class MainViewModel : ViewModel() {
     }
 
     fun updatePersons() {
-        viewModelScope.launch {
-            personsUseCase.getPersons().also {
-                withContext(Dispatchers.Main) {
-                    persons.value = it
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            personsUseCase.getPersons().also {
+//                withContext(Dispatchers.Main) {
+//                    persons.value = it
+//                }
+//            }
+//        }
+        val getPersonsRequest = OneTimeWorkRequestBuilder<getPersonsWorker>(). build()
+        WorkManager.getInstance().enqueue(getPersonsRequest)
     }
 
     init {
         updatePersons()
+        viewModelScope.launch {
+            personsUseCase.subscribePersons().collect {
+                persons.value = it
+            }
+        }
+//        getInit()
+    }
+
+    fun getInit(){
+        viewModelScope.launch {
+            persons.value = personsUseCase.getPersons()
+        }
     }
 
     suspend fun setFree() {
