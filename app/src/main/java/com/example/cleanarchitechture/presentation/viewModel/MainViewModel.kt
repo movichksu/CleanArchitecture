@@ -33,6 +33,7 @@ class MainViewModel : ViewModel() {
         const val TAG = Constants.TAG + " viewModel"
     }
 
+    private val workerUseCase: WorkerUseCase by lazy { Dependencies.getWorkerUseCase() }
     private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
     var personName: String = ""
     var personRate: String = ""
@@ -56,15 +57,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             _itemState.value = AddItemState.Loading
             //personsUseCase.registerPerson(personName, personRate.toFloat())
-            val name = workDataOf(Constants.PERSON_NAME to personName)
-            val rate = workDataOf(Constants.PERSON_RATE to personRate.toFloat())
-            val addPersonRequest = OneTimeWorkRequestBuilder<addPersonWorker>()
-                    .setInputData(name)
-                    .setInputData(rate)
-                    .build()
-            WorkManager.getInstance().enqueue(addPersonRequest)
-            updatePersons()
-
+            workerUseCase.addPersonRequest(personName, personRate.toFloat())
             _itemState.value = AddItemState.Result
             setFree()
         }
@@ -79,9 +72,7 @@ class MainViewModel : ViewModel() {
 //                }
 //            }
 //        }
-        val getPersonsRequest = OneTimeWorkRequestBuilder<getPersonsWorker>()
-                . build()
-        WorkManager.getInstance().enqueue(getPersonsRequest)
+        workerUseCase.getPersonsRequest()
     }
 
     init {
