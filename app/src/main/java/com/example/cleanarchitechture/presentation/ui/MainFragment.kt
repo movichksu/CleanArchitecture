@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.app.JobIntentService
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,11 +20,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
-import com.example.cleanarchitechture.presentation.PersonService
+import com.example.cleanarchitechture.presentation.service.AddPersonService
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
 import com.example.cleanarchitechture.presentation.adapter.ItemClickListener
 import com.example.cleanarchitechture.presentation.adapter.PersonAdapter
-import com.example.cleanarchitechture.presentation.service.GetPersonService
 import com.example.cleanarchitechture.presentation.viewModel.AddItemState
 import com.example.cleanarchitechture.presentation.viewModel.MainViewModel
 import io.reactivex.Observable
@@ -56,15 +54,15 @@ class MainFragment : Fragment(), ItemClickListener {
     private val batteryBroadcast = BatteryLevelBroadcastReceiver()
     private val addedPersonBroadcast = AddedPersonBroadcastReceiver()
 
-    private var personService: PersonService? = null
+    private var addPersonService: AddPersonService? = null
     private var boundToPersonService: Boolean = false
     private var currentPersonFlag = false
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             boundToPersonService = true
-            personService = (service as PersonService.PersonServiceBinder).getService()
+            addPersonService = (service as AddPersonService.PersonServiceBinder).getService()
             if (currentPersonFlag) {
-                personService?.startAddPersonProcess(
+                addPersonService?.startAddPersonProcess(
                     viewModel.personName,
                     viewModel.personRate.toFloat()
                 )
@@ -75,7 +73,7 @@ class MainFragment : Fragment(), ItemClickListener {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             boundToPersonService = false
-            personService = null
+            addPersonService = null
         }
 
     }
@@ -168,12 +166,12 @@ class MainFragment : Fragment(), ItemClickListener {
 
     private fun handleAddPersonClick() {
         if (boundToPersonService) {
-            personService?.startAddPersonProcess(
+            addPersonService?.startAddPersonProcess(
                 viewModel.personName,
                 viewModel.personRate.toFloat()
             )
         } else {
-            val addPersonServiceIntent = Intent(requireContext(), PersonService::class.java).apply {
+            val addPersonServiceIntent = Intent(requireContext(), AddPersonService::class.java).apply {
                 this.putExtra(Constants.PERSON_NAME, viewModel.personName)
                 this.putExtra(Constants.PERSON_RATE, viewModel.personRate.toFloat())
                 currentPersonFlag = true
