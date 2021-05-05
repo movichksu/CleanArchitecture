@@ -1,6 +1,5 @@
-package com.example.cleanarchitechture.presentation
+package com.example.cleanarchitechture.presentation.service
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -17,11 +16,9 @@ import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.domain.PersonUseCase
-import com.example.cleanarchitechture.entity.Person
 import kotlinx.coroutines.*
-import okhttp3.internal.notify
 
-class PersonService : Service() {
+class AddPersonService : Service() {
 
     companion object {
         const val TAG = "PersonService"
@@ -62,7 +59,7 @@ class PersonService : Service() {
                 sendBroadcast(it)
             }
 
-            notificationManager.cancelAll()
+            notificationManager.cancel(NOTIFICATION_ID)
         }
     }
 
@@ -74,7 +71,6 @@ class PersonService : Service() {
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -91,7 +87,7 @@ class PersonService : Service() {
     }
 
     inner class PersonServiceBinder() : Binder() {
-        fun getService(): PersonService =
-            this@PersonService
+        fun getService(): AddPersonService =
+            this@AddPersonService
     }
 }

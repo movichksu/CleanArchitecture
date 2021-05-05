@@ -1,26 +1,18 @@
 package com.example.cleanarchitechture.presentation.viewModel
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.cleanarchitechture.App
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.Dependencies
 import com.example.cleanarchitechture.domain.*
 import com.example.cleanarchitechture.entity.Person
-import com.example.cleanarchitechture.presentation.worker.getPersonsWorker
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
 
@@ -28,6 +20,7 @@ class MainViewModel : ViewModel() {
         const val TAG = Constants.TAG + " viewModel"
     }
 
+    private val workerUseCase: WorkerUseCase by lazy { Dependencies.getWorkerUseCase() }
     private val personsUseCase: PersonUseCase by lazy { Dependencies.getPersonUseCase() }
     var personName: String = ""
     var personRate: String = ""
@@ -50,12 +43,14 @@ class MainViewModel : ViewModel() {
     fun registerPerson() {
         viewModelScope.launch {
             _itemState.value = AddItemState.Loading
-            personsUseCase.registerPerson(personName, personRate.toFloat())
+            //personsUseCase.registerPerson(personName, personRate.toFloat())
+            workerUseCase.addPersonRequest(personName, personRate.toFloat())
             _itemState.value = AddItemState.Result
             setFree()
         }
     }
 
+    @SuppressLint("IdleBatteryChargingConstraints")
     fun updatePersons() {
 //        viewModelScope.launch {
 //            personsUseCase.getPersons().also {
@@ -64,8 +59,7 @@ class MainViewModel : ViewModel() {
 //                }
 //            }
 //        }
-        val getPersonsRequest = OneTimeWorkRequestBuilder<getPersonsWorker>(). build()
-        WorkManager.getInstance().enqueue(getPersonsRequest)
+        workerUseCase.getPersonsRequest()
     }
 
     init {
