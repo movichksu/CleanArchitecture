@@ -137,7 +137,7 @@ class MainFragment : Fragment(), ItemClickListener {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        checkForPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION, "location", Constants.FINE_LOCATION_RQ)
+        //checkForPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION, "location", Constants.FINE_LOCATION_RQ)
 
         nameInput.doAfterTextChanged {
             viewModel.personName = it.toString()
@@ -261,21 +261,18 @@ class MainFragment : Fragment(), ItemClickListener {
                 sensor,
                 SensorManager.SENSOR_DELAY_NORMAL)
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
+        if (checkForPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION, "location", Constants.FINE_LOCATION_RQ)) {
+            locationUpdates()
         }
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000L,
-                10f,
-                locationListener
-        )
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                1000L,
-                10f,
-                locationListener
-        )
+        else{
+            ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ),
+                    Constants.FINE_LOCATION_RQ
+            )
+        }
     }
 
     override fun onStop() {
@@ -297,16 +294,37 @@ class MainFragment : Fragment(), ItemClickListener {
         super.onDestroyView()
     }
 
-    private fun checkForPermissions(permission: String, name: String, requestCode: Int){
+    @SuppressLint("MissingPermission")
+    private fun locationUpdates(){
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000L,
+                10f,
+                locationListener
+        )
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                1000L,
+                10f,
+                locationListener
+        )
+    }
+    private fun checkForPermissions(permission: String, name: String, requestCode: Int): Boolean{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             when{
                 ContextCompat.checkSelfPermission(App.instance, permission) == PackageManager.PERMISSION_GRANTED->{
                     Toast.makeText(App.instance,"$name permission granted.", Toast.LENGTH_LONG).show()
+                    return true
                 }
-                shouldShowRequestPermissionRationale(permission) -> showDialog(permission, name, requestCode)
-                else -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
+                shouldShowRequestPermissionRationale(permission) -> {
+                    showDialog(permission, name, requestCode)
+                }
+                else -> {
+                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
+                }
             }
         }
+        return false
     }
 
     private fun showDialog(permission: String, name: String, requestCode: Int){
@@ -321,7 +339,7 @@ class MainFragment : Fragment(), ItemClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         fun innerCheck(name:String){
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED){
                 Toast.makeText(App.instance, "$name permission refused", Toast.LENGTH_LONG).show()
