@@ -1,4 +1,4 @@
-package com.example.cleanarchitechture.entity
+package com.example.cleanarchitechture.domain.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

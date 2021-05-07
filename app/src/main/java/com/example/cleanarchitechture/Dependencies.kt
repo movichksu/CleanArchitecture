@@ -1,9 +1,9 @@
 package com.example.cleanarchitechture
 
 import androidx.work.WorkManager
-import com.example.cleanarchitechture.db.LocalDataBaseSource
+import com.example.cleanarchitechture.data.db.LocalDataBaseSource
 import com.example.cleanarchitechture.domain.*
-import com.example.cleanarchitechture.server.CloudSource
+import com.example.cleanarchitechture.data.server.CloudSource
 
 object Dependencies {
 

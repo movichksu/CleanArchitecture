@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.R
-import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.domain.entity.Person
 import com.example.cleanarchitechture.presentation.service.AddPersonService
 //import com.example.cleanarchitechture.presentation.adapter.OperationAdapter
 import com.example.cleanarchitechture.presentation.adapter.ItemClickListener

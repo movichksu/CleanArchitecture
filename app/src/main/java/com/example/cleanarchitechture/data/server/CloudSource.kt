@@ -1,9 +1,9 @@
-package com.example.cleanarchitechture.server
+package com.example.cleanarchitechture.data.server
 
 import com.example.cleanarchitechture.BuildConfig
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.domain.SimplifyPersonRepository
-import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.domain.entity.Person
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

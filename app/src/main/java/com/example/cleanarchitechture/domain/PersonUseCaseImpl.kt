@@ -1,7 +1,6 @@
 package com.example.cleanarchitechture.domain
 
-import androidx.room.PrimaryKey
-import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.domain.entity.Person
 import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 
