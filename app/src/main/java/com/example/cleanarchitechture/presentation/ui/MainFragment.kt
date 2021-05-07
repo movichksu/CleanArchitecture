@@ -2,6 +2,7 @@ package com.example.cleanarchitechture.presentation.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -12,6 +13,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.BatteryManager
+import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.IBinder
@@ -23,13 +25,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.MainThread
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.cleanarchitechture.App
 import com.example.cleanarchitechture.Constants
 import com.example.cleanarchitechture.R
 import com.example.cleanarchitechture.entity.Person
@@ -130,6 +136,8 @@ class MainFragment : Fragment(), ItemClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        checkForPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION, "location", Constants.FINE_LOCATION_RQ)
 
         nameInput.doAfterTextChanged {
             viewModel.personName = it.toString()
@@ -287,6 +295,44 @@ class MainFragment : Fragment(), ItemClickListener {
         filteredListAdapter.setListener(null)
         requireActivity().unbindService(serviceConnection)
         super.onDestroyView()
+    }
+
+    private fun checkForPermissions(permission: String, name: String, requestCode: Int){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            when{
+                ContextCompat.checkSelfPermission(App.instance, permission) == PackageManager.PERMISSION_GRANTED->{
+                    Toast.makeText(App.instance,"$name permission granted.", Toast.LENGTH_LONG).show()
+                }
+                shouldShowRequestPermissionRationale(permission) -> showDialog(permission, name, requestCode)
+                else -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
+            }
+        }
+    }
+
+    private fun showDialog(permission: String, name: String, requestCode: Int){
+            AlertDialog.Builder(App.instance).apply {
+            setMessage("Permission to access your $name is required to use this app.")
+            setTitle("Permission required")
+            setPositiveButton("OK"){
+                dialog, which ->
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        fun innerCheck(name:String){
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED){
+                Toast.makeText(App.instance, "$name permission refused", Toast.LENGTH_LONG).show()
+            }
+            else{
+                Toast.makeText(App.instance, "$name permission granted", Toast.LENGTH_LONG).show()
+            }
+        }
+        when(requestCode){
+            Constants.FINE_LOCATION_RQ -> innerCheck("location")
+        }
     }
 
 
