@@ -45,11 +45,11 @@ class AddPersonService : Service() {
         ioScope.launch {
             createNotificationChannel()
             val builder = NotificationCompat.Builder(App.instance, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_person)
-                .setContentTitle(notificationTitle)
-                .setContentText("a new person $name -- $rate is added!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .build()
+                    .setSmallIcon(R.drawable.ic_person)
+                    .setContentTitle(notificationTitle)
+                    .setContentText("a new person $name -- $rate is added!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .build()
             val notificationManager = NotificationManagerCompat.from(App.instance)
             notificationManager.notify(NOTIFICATION_ID, builder)
 
@@ -60,6 +60,7 @@ class AddPersonService : Service() {
             }
 
             notificationManager.cancel(NOTIFICATION_ID)
+
         }
     }
 
@@ -71,8 +72,9 @@ class AddPersonService : Service() {
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
+
             val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -86,7 +88,7 @@ class AddPersonService : Service() {
         ioScope.cancel()
     }
 
-    inner class PersonServiceBinder() : Binder() {
+    inner class PersonServiceBinder : Binder() {
         fun getService(): AddPersonService =
             this@AddPersonService
     }
