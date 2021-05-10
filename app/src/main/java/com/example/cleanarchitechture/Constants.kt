@@ -6,4 +6,5 @@ object Constants {
     const val PERSON_NAME = "NAME"
     const val PERSON_RATE = "RATE"
     const val ADDED_PERSON_ACTION = "com.example.cleanarchitechture.ADDED_PERSON_ACTION"
+    const val FINE_LOCATION_RQ = 100
 }
