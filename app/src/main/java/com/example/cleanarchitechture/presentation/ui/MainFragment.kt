@@ -249,12 +249,12 @@ class MainFragment : Fragment(), ItemClickListener {
     override fun onStart() {
         super.onStart()
         requireActivity().registerReceiver(
-            batteryBroadcast,
-            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+                batteryBroadcast,
+                IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         )
         requireActivity().registerReceiver(
-            addedPersonBroadcast,
-            IntentFilter(Constants.ADDED_PERSON_ACTION)
+                addedPersonBroadcast,
+                IntentFilter(Constants.ADDED_PERSON_ACTION)
         )
         sensorManager.registerListener(
                 accelerometerListener,
@@ -263,8 +263,7 @@ class MainFragment : Fragment(), ItemClickListener {
 
         if (checkForPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION, "location", Constants.FINE_LOCATION_RQ)) {
             locationUpdates()
-        }
-        else{
+        } else {
             ActivityCompat.requestPermissions(
                     requireActivity(),
                     arrayOf(
@@ -295,7 +294,7 @@ class MainFragment : Fragment(), ItemClickListener {
     }
 
     @SuppressLint("MissingPermission")
-    private fun locationUpdates(){
+    private fun locationUpdates() {
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000L,
@@ -309,30 +308,29 @@ class MainFragment : Fragment(), ItemClickListener {
                 locationListener
         )
     }
-    private fun checkForPermissions(permission: String, name: String, requestCode: Int): Boolean{
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            when{
-                ContextCompat.checkSelfPermission(App.instance, permission) == PackageManager.PERMISSION_GRANTED->{
-                    Toast.makeText(App.instance,"$name permission granted.", Toast.LENGTH_LONG).show()
+    private fun checkForPermissions(permission: String, name: String, requestCode: Int): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            when {
+                ContextCompat.checkSelfPermission(App.instance, permission) == PackageManager.PERMISSION_GRANTED -> {
+                    Toast.makeText(App.instance, "$name permission granted.", Toast.LENGTH_LONG).show()
                     return true
                 }
                 shouldShowRequestPermissionRationale(permission) -> {
                     showDialog(permission, name, requestCode)
                 }
                 else -> {
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
+                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
                 }
             }
         }
         return false
     }
 
-    private fun showDialog(permission: String, name: String, requestCode: Int){
-            AlertDialog.Builder(App.instance).apply {
+    private fun showDialog(permission: String, name: String, requestCode: Int) {
+        AlertDialog.Builder(App.instance).apply {
             setMessage("Permission to access your $name is required to use this app.")
             setTitle("Permission required")
-            setPositiveButton("OK"){
-                dialog, which ->
+            setPositiveButton("OK") { dialog, which ->
                 ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
             }
         }
@@ -340,15 +338,14 @@ class MainFragment : Fragment(), ItemClickListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        fun innerCheck(name:String){
-            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED){
+        fun innerCheck(name: String) {
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(App.instance, "$name permission refused", Toast.LENGTH_LONG).show()
-            }
-            else{
+            } else {
                 Toast.makeText(App.instance, "$name permission granted", Toast.LENGTH_LONG).show()
             }
         }
-        when(requestCode){
+        when (requestCode) {
             Constants.FINE_LOCATION_RQ -> innerCheck("location")
         }
     }
