@@ -1,6 +1,7 @@
 package com.example.cleanarchitechture.presentation.worker
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.cleanarchitechture.Constants
@@ -14,13 +15,12 @@ import kotlinx.coroutines.launch
 class AddPersonWorker(
         private val context: Context,
         workerParameters: WorkerParameters
-): Worker(context, workerParameters ) {
+): CoroutineWorker(context, workerParameters ) {
     private val personUseCase: PersonUseCase = Dependencies.getPersonUseCase()
-    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         var result: Result = Result.success()
-        ioScope.launch {
+
             val name = inputData.getString(Constants.PERSON_NAME) ?: ""
             val rate = inputData.getFloat(Constants.PERSON_RATE, 0f)
             if (name.isEmpty() || rate == 0f){
@@ -31,7 +31,7 @@ class AddPersonWorker(
                 result = Result.success()
                 personUseCase.registerPerson(name,rate)
             }
-        }
+
         return result
     }
 }

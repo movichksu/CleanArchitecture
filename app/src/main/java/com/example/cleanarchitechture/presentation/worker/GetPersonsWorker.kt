@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.core.app.JobIntentService
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.cleanarchitechture.Dependencies
@@ -17,15 +18,14 @@ import java.time.Duration
 class GetPersonsWorker(
         private val context: Context,
         workerParameters: WorkerParameters
-): Worker(context, workerParameters ) {
+): CoroutineWorker(context, workerParameters ) {
     private val personUseCase: PersonUseCase = Dependencies.getPersonUseCase()
-    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         var result: Result = Result.success()
-        ioScope.launch {
+
              result = if(personUseCase.getPersons().isEmpty()){ Result.success() } else { Result.retry() }
-        }
+
         return result
     }
 

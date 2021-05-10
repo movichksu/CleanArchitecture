@@ -1,8 +1,6 @@
-package com.example.cleanarchitechture.server
+package com.example.cleanarchitechture.data.server
 
-import com.example.cleanarchitechture.entity.Person
-import io.reactivex.Observable
-import retrofit2.Call
+import com.example.cleanarchitechture.domain.entity.Person
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

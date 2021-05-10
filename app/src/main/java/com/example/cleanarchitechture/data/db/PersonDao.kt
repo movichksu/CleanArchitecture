@@ -1,7 +1,7 @@
-package com.example.cleanarchitechture.db
+package com.example.cleanarchitechture.data.db
 
 import androidx.room.*
-import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.domain.entity.Person
 import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 

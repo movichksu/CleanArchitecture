@@ -1,9 +1,10 @@
 package com.example.cleanarchitechture
 
 import androidx.work.WorkManager
-import com.example.cleanarchitechture.db.LocalDataBaseSource
+import com.example.cleanarchitechture.data.db.LocalDataBaseSource
 import com.example.cleanarchitechture.domain.*
-import com.example.cleanarchitechture.server.CloudSource
+import com.example.cleanarchitechture.data.server.CloudSource
+import com.example.cleanarchitechture.data.system.WorkerExecutor
 
 object Dependencies {
 
@@ -13,12 +14,15 @@ object Dependencies {
     private fun getPersonsRepository(): PersonRepository {
         return LocalDatabaseSource
     }
+    private fun getWorkersRepository(): PersonWorkExecutor{
+        return WorkerExecutor(WorkManager.getInstance(App.instance))
+    }
 
     fun getPersonUseCase(): PersonUseCase {
         return PersonUseCaseImpl(getPersonsRepository(), cloudSource)
     }
 
     fun getWorkerUseCase(): WorkerUseCase{
-        return WorkerUseCaseImpl(WorkManager.getInstance(App.instance))
+        return WorkerUseCaseImpl(getWorkersRepository())
     }
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cleanarchitechture.R
-import com.example.cleanarchitechture.entity.Person
+import com.example.cleanarchitechture.domain.entity.Person
 
 class PersonAdapter internal constructor(
     private var persons: List<Person>
